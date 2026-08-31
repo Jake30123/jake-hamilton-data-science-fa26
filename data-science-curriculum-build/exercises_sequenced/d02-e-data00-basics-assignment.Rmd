@@ -85,11 +85,21 @@ summary(diamonds)
 ```
 Carat: Normal is 0.7-0.8, and Min is at 0.2 and max is at 5.01, however the IQR is only ~0.6.
 Cut: Very good is the 'middle' value at 12k with the min at 1.6k and the max at 21.5k.
+Color: Somewhat of an odd system. D is the best and J is the worst, however G, in the middle, is the highest number. The spread is from 11.3k to 2.8k which a normal value of around 8-10k. 
+Clarity: Ranges from 13k to 2.5k with a normal value of around 5-9k. 
+Depth: Mean and median are 61.75 and 61.8 respective;y and the IQR is 2.5 units which shows a narrow spread compared to the max and min spread of 36 (min at 43 and max at 79).
+Table: Similar story to depth with a mean of 57.46 and an IQR of 3 with min at 43 and max at 95. Wide spread, but narrow IQR. 
+Price: Wide range and wide IQR. Mean price was almost 4k with a median of 2.4k. The max and min spread was over 18k with an IQR of around 4.5k showing a varied dataset. 
+X & Y: Both start at zero and have a mean of 5.73 with an IQR of about 1.5, however Y maxes at 58.9 while X tops out at just 10.74.
+Z: Starts at zero, mean at 3.5 and max at 31.8 with an IQR of 1.1 meaning there is a tighter clump in this dimension compared to x and y. 
 
 
 **Observations**:
 
-- (Write your observations here!)
+- It is difficult to grade a diamonds quality by looking at the number associated with color given that the worst diamonds have a color of 2808 and the best at 6775 with a middle of the road diamond running 11292. No strictly increasing or decreasing relationship can be used for analysis here. 
+- The X and Y dimensions of a diamond are incredibly similar for the average diamond (x mean= 5.731 y mean = 5.735) but are very different for outliers (x max = 10.74, y max = 58.9).
+- High value diamonds skew the average mean which is shown by the median value of $2,401 and an average value of $3,933, over a 50% increase. 
+
 
 You should always analyze your dataset in the simplest way possible, build
 hypotheses, and devise more specific analyses to probe those hypotheses. The
@@ -123,6 +133,7 @@ turn it into `diamonds %>% glimpse()`.
 ### __q4__ Use the pipe operator to re-write `summary(diamonds)`.
 
 ```{r q4-task}
+diamonds %>% summary()
 ```
 
 ## Reading Data
@@ -133,7 +144,7 @@ So far we've only been looking at built-in datasets. Ultimately, we'll want to r
 ### __q5__ Use the function `read_csv()` to load the file `"./data/tiny.csv"`.
 
 ```{r q5-task}
-
+read_csv("./data/tiny.csv")
 df_q5
 ```
 

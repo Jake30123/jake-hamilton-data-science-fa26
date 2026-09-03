@@ -101,6 +101,7 @@ diamonds |>
   ggplot() + 
   geom_point(
     color = "steelblue",
+    shape = 5,
     mapping = aes(
       x = carat,
       y = price,
@@ -117,7 +118,11 @@ diamonds |>
   below that carat level but at the same price just don’t exist.
 - Price increases quicker than carat creating a positive non-linear
   relationship.
-- In this dataset, there is a price ceiling at around \$17,500.
+- In this dataset which is scraped from only one vendor, there is a
+  price ceiling at around \$17,500.
+- This vendor sells many diamonds that cluster very close to the half
+  carat intervals. There is also a weaker clump at the quarter carat
+  intervals (see 1.25 and 1.75).
 
 ### **q2** Create a visualization showing variables `carat`, `price`, and `cut` simultaneously. Experiment with which variable you assign to which aesthetic (`x`, `y`, etc.) to find an effective visual.
 
@@ -126,13 +131,15 @@ diamonds |>
 diamonds |>
   ggplot() +
   geom_point(
+    shape = 18,
+    size = 2,
     mapping = aes(
       x = carat,
       y = price,
       color = cut
     )
   ) +
-  scale_color_brewer(palette = "Reds")
+  scale_color_brewer(palette = "YlOrRd")
 ```
 
 ![](c00-diamonds-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
@@ -144,6 +151,10 @@ diamonds |>
 - There seems to be a higher concentration of ideally cut diamonds in
   the lower carat range, as they get bigger fewer ideal diamonds are
   seen.
+- Fair diamonds are the only cut that seem to be consistenlty affects by
+  price. They appear most often at the lower price end of the main clump
+  of datapoints. This is very clearly illustrated in the 0.5-2 carat
+  range.
 
 # Communication
 

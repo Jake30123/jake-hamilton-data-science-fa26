@@ -29,7 +29,7 @@ Any time we store data in a computer, we need to work with *types*. A type is a 
 
 ```{r}
 ## No need to edit; uncomment and run
-# "a" + 1
+"a" + 1
 ```
 
 However, we *can* "add" the letter "a" and the *string* "1":
@@ -69,12 +69,12 @@ One common issue is confusing a *string* with a *variable name*. This is further
 airport <- "BOS"
 
 ## Check our airport value
-airport == ATL
+airport == "ATL"
 ```
 
 **Observations**:
 
-- Write your explanation here
+ATL was not enclosed in quotes and thus was not evaluated as a string. 
 
 ## Casting
 
@@ -92,7 +92,7 @@ For example, sometimes our numerical data gets loaded as a string, in which case
 
 ```{r q2-task}
 v_string <- c("00", "45", "90")
-v_integer <- NA_real_
+v_integer <- as.integer(v_string)
 ```
 
 Use the following test to check your work.

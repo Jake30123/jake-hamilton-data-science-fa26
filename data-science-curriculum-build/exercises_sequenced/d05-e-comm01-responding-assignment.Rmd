@@ -95,8 +95,11 @@ Here the bolded response is *actively* engaging with your colleague's question, 
 **Observations**:
 
 - Is the bolded response **active** or **passive**? Why?
+  - The response is active since it directly acknowledges the mistake, and provides a specific solution to the question.
 - Is the bolded response **constructive** or **destructive**? Why?
+  - The response is constructive as it both provides an answer and does so in a positive and kind manner.
 - How does this statement make you *feel*, relative to the bolded statement before the q1 prompt?
+  - It makes me feel smart rather than stupid for asking a solid question.
 
 ### **q2** Identify the nature of the bolded line below, rating it as either **active vs passive** and **constructive vs destructive**.
 
@@ -109,8 +112,11 @@ Here the bolded response is *actively* engaging with your colleague's question, 
 **Observations**:
 
 - Is the bolded response **active** or **passive**? Why?
+  - It is passive. While the response does acknoweldge there is a problem, it neglects to provide any specific solution.
 - Is the bolded response **constructive** or **destructive**? Why?
+  - It is constructive since it addresses the concern with positivity.
 - How does this statement make you *feel*, relative to the bolded statement before the q1 prompt?
+  - It makes me feel a little confused that the person heard my concerns and just moved on.
 
 **Intermediate Conclusion**: We can quite naturally think of discussion responses in the APCD framework. Therefore, we should try to give active and constructive responses in data discussions!
 
@@ -177,7 +183,9 @@ Let's practice once more!
 **Observations**:
 
 - Is the bolded response **active** or **passive**? Why?
+  - I think the response is passive since it is nonsequiter to the presenters previous sentence. And while related to the subject of diamonds, it derails the topic of the presentation.
 - Is the bolded response **constructive** or **destructive**? Why?
+  - The response is very lightly destructive as it throws the presenter off of their topic, meaning they have to change mental tack very quickly which can be annoying.
 
 <!-- include-exit-ticket -->
 

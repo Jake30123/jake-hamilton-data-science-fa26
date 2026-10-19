@@ -102,7 +102,8 @@ diamonds |>
     mapping = aes(
       x = carat,
       y = price,
-    )) +
+    )
+  ) +
   geom_point(
     shape = 5,
     color = "steelblue"

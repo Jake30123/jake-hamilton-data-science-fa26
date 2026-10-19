@@ -598,8 +598,8 @@ head(deaths_sorted, 10)
 
 - All of the highest deaths and cases were in small counties where the
   population was under 20k, usually way under that.
-- All but 1 (Loving) of the top 10 counties for cases appeared on the
-  top 10 counties for deaths, I would have expected at least some
+- All but 1 (Loving) of the top 10 counties for cases did not appear on the
+  top 10 counties for deaths, I would have expected more
   overlap.
 - Texas counties had both the highest ratio of deaths and cases (Loving
   for cases, McMullen for deaths)

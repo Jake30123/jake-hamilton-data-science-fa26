@@ -98,14 +98,14 @@ document your observations.
 ``` r
 ## TASK: Plot `price` vs `carat` below
 diamonds |>
-  ggplot() + 
-  geom_point(
-    color = "steelblue",
-    shape = 5,
+  ggplot(
     mapping = aes(
       x = carat,
       y = price,
-    )
+    )) +
+  geom_point(
+    shape = 5,
+    color = "steelblue"
   )
 ```
 
@@ -129,15 +129,16 @@ diamonds |>
 ``` r
 ## TASK: Plot `price`, `carat`, and `cut` below
 diamonds |>
-  ggplot() +
-  geom_point(
-    shape = 18,
-    size = 2,
+  ggplot(    
     mapping = aes(
       x = carat,
       y = price,
       color = cut
     )
+  ) +
+  geom_point(
+    shape = 18,
+    size = 2,
   ) +
   scale_color_brewer(palette = "YlOrRd")
 ```

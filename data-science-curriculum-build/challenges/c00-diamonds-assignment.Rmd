@@ -28,7 +28,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category | Needs Improvement | Satisfactory |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Effort | Some task **q**'s left unattempted | All task **q**'s attempted |
 | Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
 | Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
@@ -59,14 +59,14 @@ In this first stage, you will explore the `diamonds` dataset and document your o
 ```{r q1-task}
 ## TASK: Plot `price` vs `carat` below
 diamonds |>
-  ggplot() + 
-  geom_point(
-    color = "steelblue",
-    shape = 5,
+  ggplot(
     mapping = aes(
       x = carat,
       y = price,
-    )
+    )) +
+  geom_point(
+    shape = 5,
+    color = "steelblue"
   )
 ```
 
@@ -82,15 +82,16 @@ diamonds |>
 ```{r q2-task}
 ## TASK: Plot `price`, `carat`, and `cut` below
 diamonds |>
-  ggplot() +
-  geom_point(
-    shape = 18,
-    size = 2,
+  ggplot(    
     mapping = aes(
       x = carat,
       y = price,
       color = cut
     )
+  ) +
+  geom_point(
+    shape = 18,
+    size = 2,
   ) +
   scale_color_brewer(palette = "YlOrRd")
 ```

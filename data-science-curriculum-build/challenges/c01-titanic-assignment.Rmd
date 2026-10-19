@@ -26,7 +26,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category | Needs Improvement | Satisfactory |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Effort | Some task **q**'s left unattempted | All task **q**'s attempted |
 | Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
 | Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
@@ -56,8 +56,8 @@ df_titanic <- as_tibble(Titanic)
 
 ```{r q1-task}
 ## TASK: Perform a `glimpse` of df_titanic
-glimpse(df_titanic)
-summary(df_titanic)
+df_titanic |> 
+  glimpse() 
 ```
 
 **Observations**:
@@ -103,7 +103,7 @@ df_titanic_filtered |>
       x = Class
     )
   )+ 
-  geom_bar(
+  geom_col(
     position = "dodge",
     stat = "identity") +
   labs(
@@ -116,7 +116,7 @@ df_titanic_filtered |>
 **Observations**:
 
 - While quite stricking, this graph shows absolute count, not percentage of total people aboard. If Many more women were present than men, this graph could be misleading.
-- Purely by count, many more women survived than men overall. This tracks with practices of saving women and children first that were common during that time period.
+- Purely by count, many more female passengers (not crew) survived than male passengers. This tracks with practices of saving women and children first that were common during that time period.
 - 3rd class class passengers had an even gender split among survivors.
 - More 3rd class men survived than second class men which is surprising. But then again there may have been way more 3rd class men aboard so the percentages might tell a more complete story.
 
@@ -155,7 +155,7 @@ df_prop_filtered |>
       x = Class
     )
   )+ 
-  geom_bar(
+  geom_col(
     position = "dodge",
     stat = "identity",
     color = "black"

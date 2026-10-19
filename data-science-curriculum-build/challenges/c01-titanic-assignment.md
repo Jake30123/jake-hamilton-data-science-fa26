@@ -102,7 +102,8 @@ df_titanic <- as_tibble(Titanic)
 
 ``` r
 ## TASK: Perform a `glimpse` of df_titanic
-glimpse(df_titanic)
+df_titanic |> 
+  glimpse() 
 ```
 
     ## Rows: 32
@@ -112,18 +113,6 @@ glimpse(df_titanic)
     ## $ Age      <chr> "Child", "Child", "Child", "Child", "Child", "Child", "Child"…
     ## $ Survived <chr> "No", "No", "No", "No", "No", "No", "No", "No", "No", "No", "…
     ## $ n        <dbl> 0, 0, 35, 0, 0, 0, 17, 0, 118, 154, 387, 670, 4, 13, 89, 3, 5…
-
-``` r
-summary(df_titanic)
-```
-
-    ##        Class           Sex            Age          Survived        n         
-    ##  Length   :32   Length   :32   Length   :32   Length   :32   Min.   :  0.00  
-    ##  N.unique : 4   N.unique : 2   N.unique : 2   N.unique : 2   1st Qu.:  0.75  
-    ##  N.blank  : 0   N.blank  : 0   N.blank  : 0   N.blank  : 0   Median : 13.50  
-    ##  Min.nchar: 3   Min.nchar: 4   Min.nchar: 5   Min.nchar: 2   Mean   : 68.78  
-    ##  Max.nchar: 4   Max.nchar: 6   Max.nchar: 5   Max.nchar: 3   3rd Qu.: 77.00  
-    ##                                                              Max.   :670.00
 
 **Observations**:
 
@@ -180,7 +169,7 @@ df_titanic_filtered |>
       x = Class
     )
   )+ 
-  geom_bar(
+  geom_col(
     position = "dodge",
     stat = "identity") +
   labs(
@@ -197,9 +186,9 @@ df_titanic_filtered |>
 - While quite stricking, this graph shows absolute count, not percentage
   of total people aboard. If Many more women were present than men, this
   graph could be misleading.
-- Purely by count, many more women survived than men overall. This
-  tracks with practices of saving women and children first that were
-  common during that time period.
+- Purely by count, many more female passengers (not crew) survived than
+  male passengers. This tracks with practices of saving women and
+  children first that were common during that time period.
 - 3rd class class passengers had an even gender split among survivors.
 - More 3rd class men survived than second class men which is surprising.
   But then again there may have been way more 3rd class men aboard so
@@ -260,7 +249,7 @@ df_prop_filtered |>
       x = Class
     )
   )+ 
-  geom_bar(
+  geom_col(
     position = "dodge",
     stat = "identity",
     color = "black"
@@ -273,7 +262,7 @@ df_prop_filtered |>
 ```
 
     ## Warning: Removed 2 rows containing missing values or values outside the scale range
-    ## (`geom_bar()`).
+    ## (`geom_col()`).
 
 ![](c01-titanic-assignment_files/figure-gfm/q4-task-1.png)<!-- -->
 

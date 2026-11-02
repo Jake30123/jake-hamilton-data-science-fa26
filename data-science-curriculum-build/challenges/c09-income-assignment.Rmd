@@ -1,7 +1,7 @@
 ---
 title: "US Income"
-author: "(Your name here)"
-date: 202X-XX-XX
+author: "Jake Hamilton"
+date: 2026-11-1
 output:
   github_document:
     toc: true
@@ -26,7 +26,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category | Needs Improvement | Satisfactory |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Effort | Some task **q**'s left unattempted | All task **q**'s attempted |
 | Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
 | Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
@@ -52,7 +52,7 @@ library(tidyverse)
 
 ```{r q1-task}
 ## TODO: Give the filename for your copy of Table B01003
-filename_pop <- NA_character_
+filename_pop <- "./data/ACSDT5Y2018.B01003-Data.csv"
 
 ## NOTE: No need to edit
 df_pop <-
@@ -82,7 +82,7 @@ This means that for cases listed as `*****` the US Census Bureau recommends trea
 
 ```{r q2-task}
 ## TODO: Give the filename for your copy of Table S1903
-filename_income <- NA_character_
+filename_income <- "./data/ACSST5Y2018.S1903-Data.csv"
 
 ## NOTE: No need to edit
 df_income <-
@@ -120,9 +120,22 @@ df_q3 <-
     # it will ignore the annotation columns
     contains("median") & matches("\\d-person families") & !contains("Annotation of")
   ) %>%
-  mutate(across(contains("median"), as.numeric)) %>%
-## TODO: Pivot the data, rename the columns
-  glimpse()
+  mutate(across(contains("median"), as.numeric)) |> 
+  glimpse() |> 
+  pivot_longer(
+    cols = !c("Geography", "Geographic Area Name"),
+    names_to = c(".value", "category"), # Regex 1, Regex 2
+    names_pattern = "^(Estimate|Margin of Error)!!.*!!(\\d-person families)$"
+    # Start at beginning of string
+    # Pick estimate or MOE
+    # Middle of the string with !! delimiter
+    # Pull x - person families
+  ) |> 
+  glimpse() |> 
+  rename(
+    "geographic_area_name" = "Geographic Area Name",
+    "income_estimate" = "Estimate",
+    "income_moe" = "Margin of Error")
 ```
 
 Use the following tests to check your work:
@@ -151,8 +164,13 @@ $$\text{MOE} = 1.645 \times \text{SE}.$$
 ### **q4** Convert the margin of error to standard error. Additionally, compute a 99% confidence interval on income, and normalize the standard error to `income_CV = income_SE / income_estimate`. Provide these columns with the names `income_SE, income_lo, income_hi, income_CV`.
 
 ```{r q4-task}
-
-df_q4
+zstar <-  qnorm(0.995) # Value for 99% confidence
+df_q4 <- df_q3|> 
+  mutate(income_SE = income_moe / 1.645,
+         income_lo = income_estimate - zstar * income_SE,
+         income_hi = income_estimate + zstar * income_SE,
+         income_CV = income_SE / income_estimate
+         )
 ```
 
 Use the following tests to check your work:
@@ -207,7 +225,9 @@ One last wrangling step: We need to join the two datasets so we can compare popu
 ```{r q5-task}
 ## TODO: Join df_q4 and df_pop by the appropriate column
 
-df_data
+df_data <- df_q4 |> 
+  left_join(df_pop, "Geography") |> 
+  select(!"Geographic Area Name")
 ```
 
 # Analysis
@@ -246,13 +266,13 @@ df_data %>%
 **Observations**:
 
 - Document your observations here.
-  - (Your response here)
-  - (Your response here)
-  - ...
+  - It is difficult to tell what this graph is communicating. The colors are hard to distinguish from each other but I am color blind so that may be a me problem.
+  - Some counties like Suffolk have a super narrow spread of incomes whereas Nantucket spans almost the entire graph.
+  - Larger families (5 or 6 people) tend to fall on the higher side of the income bracket for a given county.
 - Can you confidently distinguish between household incomes in Suffolk county? Why or why not?
-  - (Your response here)
+  - No, their margins of error at a 99% confidence interval overlap so we cannot be 99% certain whether one true estimated income is higher than the other.
 - Which counties have the widest confidence intervals?
-  - (Your response here)
+  - Nantucket, Dukes, Berkshire, Hampshire, Franklin.
 
 In the next task you'll investigate the relationship between population and uncertainty.
 
@@ -261,14 +281,39 @@ In the next task you'll investigate the relationship between population and unce
 *Hint*: Remember that standard error is a function of *both* variability (e.g. variance) and sample size.
 
 ```{r q7-task}
+library(patchwork)
+
+p_log <- df_data |> 
+  ggplot(aes(x = population_estimate, y = income_SE)) +
+  geom_point() +
+  scale_x_log10() +
+  scale_y_log10() + 
+  labs(
+    x = "Population Estimate (# of people)",
+    y = "Income Standard Error (dollars)",
+    title = "Log-Log scale"
+  )
+
+p_linear <- df_data |> 
+  ggplot(aes(x = population_estimate, y = income_SE)) +
+  geom_point() +
+  labs(
+    x = "Population Estimate (# of people)",
+    y = "Income Standard Error (dollars)",
+    title = "Linear scale"
+  )
+
+p_linear + p_log +
+  plot_annotation(title = "Income Standard Error vs. Population")
 ```
 
 **Observations**:
 
 - What *overall* trend do you see between `SE` and population? Why might this trend exist?
-  - (Your response here)
+  - Standard error falls dramatically as the population increases.
+  - This trend may exist because of how sampling is performed. Let's say you set out to survey 1% of the population of an area, for a 100 person town, that's just one person. For a 1 million person city, that's 10,000 people. Since standard error is a function of variance and sample size, a small sample will make the standard error larger.
 - What does this *overall* trend tell you about the relative ease of studying small vs large counties?
-  - (Your response here)
+  - Studying large counties is easier. The more populous the lower the error (generally).
 
 # Going Further
 
@@ -280,11 +325,57 @@ Now it's your turn! You have income data for every county in the United States: 
 
 ```{r q8-task}
 ## TODO: Pose and answer your own question about the data
+## Question: How does the size of family relate to income per person?
+df_temp <- df_data |>
+  mutate(
+    household_pop = as.integer(str_extract(category, "\\d")),
+    income_per_person = income_estimate / household_pop,
+    income_lo_pp = income_lo,
+    income_hi_pp = income_hi,
+    ) |> 
+  filter(
+    na.rm = TRUE,
+    ) 
+
+g_per <- df_temp |> 
+  ggplot(
+    aes(
+      x = income_per_person,
+      y = household_pop,
+    )
+  ) +
+  geom_point() +
+  labs(
+    x = "Income Per Person (dollars)",
+    y = "Household Population (number of people)",
+    title = "Per Person Income"
+  )
+
+g_tot <- df_temp |> 
+  ggplot(
+    aes(
+      x = income_estimate,
+      y = household_pop
+    )
+  ) +
+  geom_point() +
+  labs(
+    x = "Income Estimate (dollars)",
+    y = "Household Population (number of people)",
+    title = "Total Income"
+  )
+
+g_per + g_tot + plot_annotation(title = "Income vs Household Size")
+  
 ```
 
 **Observations**:
 
-- Document your observations here
+- Income per household increases with household size.
+- Income per person decreases with household size.
+- Even though it may seem that larger households are wealthier, the wealth per person shrinks noticeably with each person added.
+- This speaks to the financial burden of raising multiple children, taking care of grandparents, or just generally having fewer income earning individuals in a household.
+- However, it is worth noting that the cost of one time purchases like owning a house are amortized among more individuals which is not accounted for when just income per person is being viewed. A spending per person graph would be a nice complement to the above graphs. 
 
 Ideas:
 

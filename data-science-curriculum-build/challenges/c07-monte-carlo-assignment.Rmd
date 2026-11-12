@@ -158,7 +158,7 @@ Answer the questions below.
 ## TASK: Finish implementing this function
 
 stat <- function(x, y) {
-  mean(sqrt(x^2 + y^2) <= 1) * 4
+  (sqrt(x^2 + y^2) <= 1) * 4
 }
 ```
 

@@ -1,0 +1,340 @@
+The Islands, Part 2: Study
+================
+Elias, Isabella, Sascha, Jake
+2026-11-12
+
+- [Grading Rubric](#grading-rubric)
+  - [Individual](#individual)
+  - [Submission](#submission)
+- [Setup](#setup)
+  - [**q1** Planning a study (TEAMWORK)](#q1-planning-a-study-teamwork)
+  - [**q2** EDA](#q2-eda)
+  - [**q3** Key Analyses](#q3-key-analyses)
+  - [**q4** Answers](#q4-answers)
+
+*Purpose*: This is part 2 of 2. In part 1 you *planed* your statistical
+project, particularly your data collection. In this part you will give
+updates on your plan, and report your findings.
+
+This challenge is deliberately shorter so you have time to collect and
+analyze your data.
+
+<!-- include-rubric -->
+
+# Grading Rubric
+
+<!-- -------------------------------------------------- -->
+
+Unlike exercises, **challenges will be graded**. The following rubrics
+define how you will be graded, both on an individual and team basis.
+
+## Individual
+
+<!-- ------------------------- -->
+
+| Category | Needs Improvement | Satisfactory |
+|----|----|----|
+| Effort | Some task **q**’s left unattempted | All task **q**’s attempted |
+| Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
+| Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
+| Assessed | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support |
+| Specified | Uses the phrase “more data are necessary” without clarification | Any statement that “more data are necessary” specifies which *specific* data are needed to answer what *specific* question |
+| Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability | Code sufficiently close to the [style guide](https://style.tidyverse.org/) |
+
+## Submission
+
+<!-- ------------------------- -->
+
+Make sure to commit both the challenge report (`report.md` file) and
+supporting files (`report_files/` folder) when you are done! Then submit
+a link to Canvas. **Your Challenge submission is not complete without
+all files uploaded to GitHub.**
+
+# Setup
+
+<!-- ----------------------------------------------------------------------- -->
+
+``` r
+library(tidyverse)
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.2.1     ✔ readr     2.2.0
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+    ## ✔ purrr     1.2.2     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
+library(rsample)
+
+# TODO: Include any other packages you need
+```
+
+### **q1** Planning a study (TEAMWORK)
+
+While you provided this plan in c08 (Part 1), please include your plan
+here. In particular, describe how you updated your plan in response to
+feedback.
+
+#### Population
+
+- (What population are you going to study?)
+  - All of the Islanders? Only the residents of Helvig? Participants
+    meeting certain criteria (in which case, you need to list
+    *covariates*)?
+- We are studying the populations of Colmar, Mahuti, Gordes, and Valais.
+  We will only be looking at people who have jobs.
+
+#### Quantity of interest
+
+- Percentage of people who are satisfied with their job depending on the
+  size of town they live in.
+
+#### Covariates
+
+- Age
+- Salary
+- Job
+
+#### Observation or experiment?
+
+The Islands allows you to ask islanders to complete tasks. If you just
+take measurements on your participants, then it’s an *observational
+study*. But if you also introduce something that’s meant to change the
+outcome of a measurement (e.g., drinking coffee before taking a test),
+that’s called an *experimental study*. You need to decide whether your
+study is observational or experimental.
+
+- Observation
+
+#### Question / Hypothesis
+
+- How does the size of town someone lives in affect their job
+  satisfaction?
+
+#### Sampling plan
+
+- (What steps will you take to collect the data?)
+  - We are going to collect a random sample of 68 houses in the two
+    smallest and two largest villages.
+  - Each team member is assigned one village.
+  - First, every house was assigned a number and then ordered randomly.
+  - Second, the houses were sampled one by one.
+  - At each house, a working member of the family was randomly chosen
+    and surveyed.
+  - The person was asked “Do you like your job?”.
+  - Even if a person elaborated beyond yes or no, only a 1 was recorded
+    for no and a 3 for yes.
+  - Non-working or people who declined were skipped and we moved to the
+    next house.
+  - This process was repeated until 68 samples were obtained.
+  - Job satisfaction, job, age, name, salary, and town were recorded for
+    each person surveyed.
+- (How will you ensure the data is representative of your chosen
+  population?)
+  - Large sample size of 68 and random sampling which lowers our
+    standard error and thus is more representative.
+- (For experiments only: How will you ensure any effects you observe are
+  due to the treatment, and not due to other factors?)
+  - N/A
+- (How will you choose your sample size?)
+  - We went for a 90% confidence interval with a 10% margin of error
+    which necessitates a sample size of 68. This was on the upper end of
+    what was feasible time wise.
+
+### **q2** EDA
+
+Conduct an EDA on your data. Add as many code chunks as you need. Ensure
+your EDA gives enough context of the data for us to understand what
+comes next in this report.
+
+``` r
+filename_job <- "./data/c10-job-satistfaction-data.csv"
+df_clean <- read_csv(filename_job)
+```
+
+    ## Rows: 272 Columns: 7
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (3): Village, Person, Job
+    ## dbl (3): Household, Satisfied, Age
+    ## num (1): Income
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+df_jobs <- read_csv(filename_job) |> 
+  mutate(Satisfied = if_else(Satisfied > 2, "Yes", "No")) 
+```
+
+    ## Rows: 272 Columns: 7
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (3): Village, Person, Job
+    ## dbl (3): Household, Satisfied, Age
+    ## num (1): Income
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+df_jobs
+```
+
+    ## # A tibble: 272 × 7
+    ##    Village Household Person           Satisfied   Age Job              Income
+    ##    <chr>       <dbl> <chr>            <chr>     <dbl> <chr>             <dbl>
+    ##  1 Colmar       1601 Astrid Olesen    No           22 Butcher            1035
+    ##  2 Colmar        310 Mahika Bose      No           47 Physiotherapist    4555
+    ##  3 Colmar       2020 Kerstin Pallesen No           40 Speech Therapist   5930
+    ##  4 Colmar        928 Neal Paterson    Yes          41 Wheat Farmer       4365
+    ##  5 Colmar       1012 Rohan Mishra     Yes          47 Doctor            10319
+    ##  6 Colmar       2165 Joshua Sato      No           38 Dairy Farmer       4445
+    ##  7 Colmar       1103 Ravi Chaudhuri   Yes          29 Barista            2650
+    ##  8 Colmar       1058 Esme Dayal       Yes          28 Cleaner            2124
+    ##  9 Colmar       1048 Anais Lingutla   Yes          54 Brewer             2818
+    ## 10 Colmar       1208 Auguste Krishna  Yes          48 Glazier            8118
+    ## # ℹ 262 more rows
+
+``` r
+ci_jobs <- df_jobs %>%
+  group_by(Village) %>%
+  summarize(
+    n = n(),
+    n_satisfied = sum(Satisfied == "Yes"),
+    p = n_satisfied / n,
+    SE = sqrt(p * (1 - p) / n),
+    ME = 1.645 * SE,
+    lower_CI = p - ME,
+    upper_CI = p + ME
+  ) %>%
+  select(Village, lower_CI, upper_CI, p)
+
+ci_jobs
+```
+
+    ## # A tibble: 4 × 4
+    ##   Village lower_CI upper_CI     p
+    ##   <chr>      <dbl>    <dbl> <dbl>
+    ## 1 Colmar     0.713    0.875 0.794
+    ## 2 Gordes     0.631    0.810 0.721
+    ## 3 Mahuti     0.800    0.935 0.868
+    ## 4 Valais     0.747    0.900 0.824
+
+``` r
+ci_jobs %>%
+  ggplot(aes(Village, p, ymin = lower_CI, ymax = upper_CI, color = Village)) +
+  geom_errorbar() +
+  guides(color = FALSE) +
+  labs(x = "Village", y = "Percentage Satisfied", title = "Job Satisfaction  Percentage by Village (95% confidence interval)") +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+    ## of ggplot2 3.3.4.
+    ## This warning is displayed once per session.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](c10-islands-pt2-assignment_files/figure-gfm/q2_eda-1.png)<!-- -->
+
+``` r
+df_jobs %>%
+  ggplot(aes(Village, Income, color = Village)) +
+  geom_boxplot() + 
+  labs(title = "Income vs Village") +
+  guides(color = FALSE) + 
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+![](c10-islands-pt2-assignment_files/figure-gfm/q2_eda-2.png)<!-- -->
+
+``` r
+df_jobs %>%
+  ggplot(aes(Village, Age, color = Village)) +
+  geom_boxplot() +
+  labs(title = "Age vs Village") +
+  guides(color = FALSE) +
+  theme(
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+![](c10-islands-pt2-assignment_files/figure-gfm/q2_eda-3.png)<!-- -->
+
+``` r
+#adding labels for villages considered large/small
+df_histogram <-
+  df_clean %>%
+  mutate(
+    size_group = if_else(Village %in% c("Colmar", "Mahuti"), "large", "small")
+  )
+
+
+df_boot_prop <-
+  df_histogram %>%
+  bootstraps(., times = 1000) %>%
+  mutate(
+    diff_est = map_dbl(
+      splits,
+      function(split_df) {
+        analysis(split_df) %>%
+          summarize(
+            diff_est = mean(Satisfied[size_group == "large"] == 3) -
+              mean(Satisfied[size_group == "small"] == 3)
+          ) %>%
+          pull(diff_est)
+      }
+    )
+  )
+
+df_boot_prop %>%
+  ggplot(aes(diff_est)) +
+  geom_histogram() +
+  labs(
+    x = "Estimated Difference",
+    y = "Count",
+    title = "Boostrap Difference Between Large and Small Town Job Satisfaction"
+  )
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value `binwidth`.
+
+![](c10-islands-pt2-assignment_files/figure-gfm/q2_eda-4.png)<!-- -->
+
+### **q3** Key Analyses
+
+Present the key analyses that support your questions / hypotheses. This
+could include summary statistics (e.g., a proportion of Islanders),
+grouped summary statistics (e.g., a proportion for group A, and for
+group B), or visualizations (e.g., a histogram). This section should be
+short, and every analysis should directly relate to q4.
+
+We found that there was no correlation between the size of town someone
+lives in and their job satisfaction. As shown in graph 1 above, the 95%
+confidence intervals overlap for all four towns meaning we cannot be
+confident there is a real difference in job satisfaction. We also made
+plots of our covariats (Age and Income) and there was still no
+perceptible difference. This signals that job satisfaction is driven by
+factors other than what we were looking for. Finally, we also ran a
+bootstrap analysis and found there may be a slightly higher satisfaction
+for people in larger villages but it was not statistically significant.
+
+### **q4** Answers
+
+Connect your Key Analyses to your questions / hypotheses. What did you
+conclude from your study?
+
+We concluded that at a 90% confidence interval there is no statistical
+difference between the size of town in which someone lives and their job
+satisfaction.
